@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Message Plus - Login</title>           
+        <h:outputScript library="sistema" name="sistema.js"/>
+        <h:outputStylesheet library="sistema" name="estilo.css"/>
+        <!--<link type="text/css" rel="Stylesheet" href="css/estilo.css" />-->
+        <!--<link rel="icon" type="image/png" href="imagenes/logo_2_ep_nuevo.ico" />-->
+    </h:head>
+    <h:body>
+        <p:growl autoUpdate="true" showDetail="true" sticky="true"/>
+        <p:layout fullPage="true">
+            <p:layoutUnit position="center" style="background-color: #367bab;">
+                <div align="center" style="background-color: #367bab; width: 100%; height: 100%;" >
+                    <br/>
+                    <br/>
+                    <p:graphicImage value="imagenes/LogoTelefonica.png" width="350" alt="Image Description for cabecera mplus" title="cabecera mplus"/>
+                    <br/>
+                    <br/>
+                    <h:form id="formulario" binding="#{mbe_login.formulario}"/>
+                </div>
+            </p:layoutUnit>
+
+        </p:layout>
+    </h:body>
+</html>
+

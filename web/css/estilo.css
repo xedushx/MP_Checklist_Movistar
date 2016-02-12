@@ -1,0 +1,99 @@
+.ui-widget {
+    font-size: 11px; 
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;    
+} 
+
+.ui-datatable table {
+    margin: 0;
+    padding: 0;
+    border-collapse:collapse; 
+    font-size: 10px;
+}
+
+/*VENTANA DE INTRO*/
+.logotipomp{
+    width:415px;
+    height:150px;
+    float: left;
+    background-color:#367BAB;
+}
+.loginscreen{
+    width:415px;
+    height:250px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10pt;
+    text-align:center;
+    color:#FFF;
+    border: 0px;
+    background:#367BAB url(../imagenes/loginfondo.jpg);
+}
+
+.loginespacio{
+    width:415px;
+    height:30px;
+    float: left;
+}
+
+.espacio{
+    width:415px;
+    height:30px;
+}
+
+.loginlinea{
+    width:275px;
+    height:35px;
+    float: left;
+    margin-left:150px;
+    margin-top:10px;
+}
+.logintexto{
+    width:120px;
+    height:35px;
+    float: left;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12pt;
+    text-align:left;
+    margin-left:30px;
+    margin-top:10px;
+    line-height:1.7em;
+    color:#255672;
+}
+.loginform{
+    width:150px;
+    height:20px;
+    margin-top:10px;
+    float: left;
+}
+.loginformcombo{
+    width:150px;
+    height:25px;
+    margin-top:10px;
+    float: left;
+}
+.loginboton{
+    width:100px;
+    height:25px;
+    float: right;
+}
+.loginfrgtpass{
+    width:415px;
+    height:20px;
+    float:left;
+    margin-top:15px;
+    text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+}
+.panelprincipal{
+    width:95%;
+    height:80%;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12pt;
+    text-align:center;
+    color:#FFF;
+    border: 0px;
+}
