@@ -12,7 +12,7 @@ import javax.faces.event.ActionEvent;
 
 /**
  *
- * @author Diego
+ * @author xprime
  */
 public abstract class sis_pantalla {
 

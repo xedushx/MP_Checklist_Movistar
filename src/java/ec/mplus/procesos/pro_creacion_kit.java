@@ -93,7 +93,7 @@ public class pro_creacion_kit extends sis_pantalla {
         tab_tabulador.setId("tab_tabulador");
 
         tab_tabulador.agregarTab("INSUMOS REQUERIDOS", pat_mov_detalle_kit);
-        
+
         div_division.setId("div_division");
 
         div_division.dividir2(pat_mov_cabecera_kit, tab_tabulador, "30%", "H");
@@ -189,7 +189,6 @@ public class pro_creacion_kit extends sis_pantalla {
         this.div_division = div_division;
     }
 
-
     @Override
     public void insertar() {
         if (mov_cabecera_kit.isFocus()) {
@@ -197,21 +196,29 @@ public class pro_creacion_kit extends sis_pantalla {
                 mov_cabecera_kit.getColumna("cki_fecha_registro").setValorDefecto(sis_soporte.obtener_instancia_soporte().getFechaActual() + " " + sis_soporte.obtener_instancia_soporte().getHoraActual());
                 mov_cabecera_kit.getColumna("id_usuario").setValorDefecto(sis_soporte.obtener_instancia_soporte().obtener_variable("id_usuario"));
                 mov_cabecera_kit.insertar();
+                mov_detalle_kit.getColumna("dki_cantidad").setMetodoChange("obtenerPrecioTotal");
+                sis_soporte.obtener_instancia_soporte().addUpdate("tab_tabulador:mov_detalle_kit");
+                mov_detalle_kit.actualizar();
             } else {
                 sis_soporte.obtener_instancia_soporte().agregarMensajeInfo("No se puede Insertar",
                         "Debe guardar el kit actual");
             }
         } else if (mov_detalle_kit.isFocus()) {
             mov_detalle_kit.insertar();
+
         }
     }
 
     @Override
     public void guardar() {
-        mov_cabecera_kit.guardar();
-        mov_detalle_kit.guardar();
-        guardarPantalla();
-        actualizar();
+        try {
+            mov_cabecera_kit.guardar();
+            mov_detalle_kit.guardar();
+            guardarPantalla();
+            actualizar();
+        } catch (Exception e) {
+            sis_soporte.obtener_instancia_soporte().agregarMensajeError("ERROR", "Verificar la información ingresada");
+        }
     }
 
     @Override

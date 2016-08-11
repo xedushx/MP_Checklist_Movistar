@@ -117,11 +117,13 @@ public class mbe_login implements Serializable {
         }else if (lstr_empresa.isEmpty() || lstr_empresa.equalsIgnoreCase("null")) {
             sis_soporte.obtener_instancia_soporte().agregar_mensaje_error("Seleccione la Empresa", "");
         } else {
-            List lis_consulta = conexion.consultar("SELECT usu.id_usuario,usu.id_perfil,usu.tema,emp.id_empresa "
-                    + "FROM tbl_usuario usu, tbl_empresa emp "
+            List lis_consulta = conexion.consultar("SELECT usu.id_usuario,usu.id_perfil,usu.tema,emp.id_empresa,"
+                    + "(case when per.nivel_aprobacion is null then 0 else per.nivel_aprobacion end) as nivelAprobacionActual "
+                    + "FROM tbl_usuario usu, tbl_empresa emp, tbl_perfil per  "
                     + "WHERE usu.nombre='" + lstr_usuario + "' AND "
                     + "usu.clave=MD5('" + lstr_clave + "') AND "
                     + "emp.id_empresa = usu.id_empresa AND "
+                    + "usu.id_perfil = per.id_perfil AND "
                     + "usu.estado_sesion ='true'");
             if (lis_consulta.size() > 0) {
                 Object fila[] = (Object[]) lis_consulta.get(0);
@@ -129,9 +131,11 @@ public class mbe_login implements Serializable {
                 int lint_perfil = (Integer) fila[1];
                 String lstr_tema = (String) fila[2];
                 lstr_empresa = String.valueOf((Integer) fila[3]);
+                String nivel_aprobacion = String.valueOf((Integer) fila[4]);
                 
                 sis_soporte.obtener_instancia_soporte().crear_variable("id_usuario", lint_usuario + "");
                 sis_soporte.obtener_instancia_soporte().crear_variable("id_perfil", lint_perfil + "");
+                sis_soporte.obtener_instancia_soporte().crear_variable("nivelAprobacionActual", nivel_aprobacion + "");
                 sis_soporte.obtener_instancia_soporte().crear_variable("tema", lstr_tema);
                 sis_soporte.obtener_instancia_soporte().crear_variable("nombre_usuario", lstr_usuario + "");
                 sis_soporte.obtener_instancia_soporte().crear_variable("empresa", lstr_empresa);

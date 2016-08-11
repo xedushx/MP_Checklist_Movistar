@@ -34,10 +34,10 @@ public class pro_aprobacion_insumos3 extends sis_pantalla {
         bot_agregar_kit.setMetodo("agregarInsumosKit");
 
         bar_botones.agregarBoton(bot_agregar_kit);
-        
+
         com_kit.setCombo("Select cki_codigo,cki_descripcion from mov_cabecera_kit where cki_estado = true");
         bar_botones.agregarComponente(com_kit);
-        
+
         pf_tabulador tab_tabulador = new pf_tabulador();
         tab_tabulador.setId("tab_tabulador");
 
@@ -136,45 +136,45 @@ public class pro_aprobacion_insumos3 extends sis_pantalla {
         agregarComponente(div_division);
     }
 
-    public void agregarInsumosKit(){
+    public void agregarInsumosKit() {
         try {
             Object objCkiCodigo = com_kit.getValue();
-            if (objCkiCodigo != null){
+            if (objCkiCodigo != null) {
                 String cki_codigo = (String) objCkiCodigo;
-                
+
                 pf_tabla mov_detalle_kit = sis_soporte.obtener_instancia_soporte().consultarTabla("Select * from mov_detalle_kit where cki_codigo = " + cki_codigo);
-                
+
                 int totalFilas = mov_detalle_kit.getTotalFilas();
-                
-                if (totalFilas > 0){
-                    
-                    for (int i = 0; i < totalFilas; i++){
+
+                if (totalFilas > 0) {
+
+                    for (int i = 0; i < totalFilas; i++) {
                         tab_det_aprobacion.insertar();
-                        
-                        tab_det_aprobacion.setValor("das_precio", mov_detalle_kit.getValor(i,"dki_precio"));
-                        tab_det_aprobacion.setValor("das_cantidad", mov_detalle_kit.getValor(i,"dki_cantidad"));
-                        tab_det_aprobacion.setValor("das_precio_total", mov_detalle_kit.getValor(i,"dki_precio_total"));
-                        tab_det_aprobacion.setValor("ins_codigo", mov_detalle_kit.getValor(i,"ins_codigo"));
-                        tab_det_aprobacion.setValor("uni_codigo", mov_detalle_kit.getValor(i,"uni_codigo"));
+
+                        tab_det_aprobacion.setValor("das_precio", mov_detalle_kit.getValor(i, "dki_precio"));
+                        tab_det_aprobacion.setValor("das_cantidad", mov_detalle_kit.getValor(i, "dki_cantidad"));
+                        tab_det_aprobacion.setValor("das_precio_total", mov_detalle_kit.getValor(i, "dki_precio_total"));
+                        tab_det_aprobacion.setValor("ins_codigo", mov_detalle_kit.getValor(i, "ins_codigo"));
+                        tab_det_aprobacion.setValor("uni_codigo", mov_detalle_kit.getValor(i, "uni_codigo"));
                     }
-                    
+
                     sis_soporte.obtener_instancia_soporte().addUpdate("tab_tabulador:tab_det_aprobacion");
-                    
+
                 } else {
                     sis_soporte.obtener_instancia_soporte().agregarMensajeInfo("Atención", "No se encontraron detalles para el Kit seleccionado.");
                 }
-                
-                
+
+
             } else {
                 sis_soporte.obtener_instancia_soporte().agregarMensajeInfo("Atención", "Debe seleccionar un Kit");
             }
-            
-            
+
+
         } catch (Exception e) {
             sis_soporte.obtener_instancia_soporte().agregarMensajeError("Error al agregar Insumos del Kit", "Detalle: " + e.getMessage());
         }
     }
-    
+
     public void obtenerPrecioTotal(AjaxBehaviorEvent evt) {
 
         try {
@@ -198,7 +198,7 @@ public class pro_aprobacion_insumos3 extends sis_pantalla {
         }
 
     }
-    
+
     public void obtenerPrecioUnidad(AjaxBehaviorEvent evt) {
 
         try {
@@ -277,12 +277,14 @@ public class pro_aprobacion_insumos3 extends sis_pantalla {
             if (tab_cab_aprobacion.isFilaInsertada() == false) {
                 tab_cab_aprobacion.getColumna("cas_fecha_registro").setValorDefecto(sis_soporte.obtener_instancia_soporte().getFechaActual() + " " + sis_soporte.obtener_instancia_soporte().getHoraActual());
                 tab_cab_aprobacion.insertar();
+                tab_det_aprobacion.actualizar();
             } else {
                 sis_soporte.obtener_instancia_soporte().agregarMensajeInfo("No se puede Insertar",
                         "Debe guardar la solicitud actual");
             }
         } else if (tab_det_aprobacion.isFocus()) {
             tab_det_aprobacion.insertar();
+            
         }
 
     }
@@ -290,9 +292,22 @@ public class pro_aprobacion_insumos3 extends sis_pantalla {
     @Override
     public void guardar() {
         // valida la longitud minima del campo nick si inserto o modifico
-        tab_cab_aprobacion.guardar();
-        tab_det_aprobacion.guardar();
-        guardarPantalla();
+        String usuario = tab_cab_aprobacion.getValor("id_usuario").trim();
+        String estacion = tab_cab_aprobacion.getValor("ees_codigo").trim();
+        String trabajo = tab_cab_aprobacion.getValor("cas_tipo_trabajo").trim();
+        String fecha = tab_cab_aprobacion.getValor("cas_fecha_trabajo").trim();
+        try {
+            if (!usuario.isEmpty() && !estacion.isEmpty() && !trabajo.isEmpty() && !fecha.isEmpty()) {
+                tab_cab_aprobacion.guardar();
+                tab_det_aprobacion.guardar();
+                guardarPantalla();
+            } else {
+                sis_soporte.obtener_instancia_soporte().agregarMensajeInfo("Validación!", "Ingrese información valida");
+            }
+        } catch (Exception e) {
+            sis_soporte.obtener_instancia_soporte().agregarMensajeError("ERROR!", "Error al almacenar los datos, verifique la información ingresada");
+
+        }
     }
 
     @Override
@@ -327,6 +342,4 @@ public class pro_aprobacion_insumos3 extends sis_pantalla {
     public void setCom_kit(pf_combo com_kit) {
         this.com_kit = com_kit;
     }
-    
-    
 }

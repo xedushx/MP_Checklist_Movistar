@@ -1,6 +1,6 @@
 /**
  *
- * @author Diego Fernando Jácome
+ * @author xprime
  */
 $(document).bind("touchmove", function(event) {
     event.preventDefault();
