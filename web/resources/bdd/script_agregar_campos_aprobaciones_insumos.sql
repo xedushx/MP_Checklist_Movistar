@@ -32,7 +32,11 @@ COMMENT ON COLUMN tbl_perfil.nivel_aprobacion IS 'permite registrar el nivel de 
 COMMENT ON COLUMN tbl_perfil.estado IS 'indica si el perfil está activo para realizar aprobaciones de insumos';
 
 
--- agrega los campos de aprobaciones de insumos
+-- elimina y agrega los campos de aprobaciones de insumos
+ALTER TABLE mov_cab_aprobacion_solicitudes
+  DROP COLUMN cas_fecha_aprobacion_sup;
+ALTER TABLE mov_cab_aprobacion_solicitudes
+  DROP COLUMN cas_fecha_aprobacion;
 ALTER TABLE mov_cab_aprobacion_solicitudes
   DROP COLUMN cas_estado_aprobacion;
 ALTER TABLE mov_cab_aprobacion_solicitudes
@@ -52,6 +56,32 @@ COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_2 IS 'estado de 
 COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_3 IS 'estado de aprobación nivel 3';
 COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_4 IS 'estado de aprobación nivel 4';
 COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_5 IS 'estado de aprobación nivel 5';
+
+
+-- elimina y agrega columnas de aprobaciones de detalles
+ALTER TABLE mov_det_aprobacion_solicitudes
+  DROP COLUMN das_fecha_aprobacion_supervisor;
+ALTER TABLE mov_det_aprobacion_solicitudes
+  DROP COLUMN das_fecha_aprobacion;
+ALTER TABLE mov_det_aprobacion_solicitudes
+  DROP COLUMN das_estado_aprobacion_supervisor;
+ALTER TABLE mov_det_aprobacion_solicitudes
+  DROP COLUMN das_estado_aprobacion;
+ALTER TABLE mov_det_aprobacion_solicitudes
+  ADD COLUMN das_aprobacion_1 boolean;
+ALTER TABLE mov_det_aprobacion_solicitudes
+  ADD COLUMN das_aprobacion_2 boolean;
+ALTER TABLE mov_det_aprobacion_solicitudes
+  ADD COLUMN das_aprobacion_3 boolean;
+ALTER TABLE mov_det_aprobacion_solicitudes
+  ADD COLUMN das_aprobacion_4 boolean;
+ALTER TABLE mov_det_aprobacion_solicitudes
+  ADD COLUMN das_aprobacion_5 boolean;
+COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_1 IS 'estado de aprobación nivel 1 detalle';
+COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_2 IS 'estado de aprobación nivel 2 detalle';
+COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_3 IS 'estado de aprobación nivel 3 detalle';
+COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_4 IS 'estado de aprobación nivel 4 detalle';
+COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_5 IS 'estado de aprobación nivel 5 detalle';
 
 --usuarios desarrollo
 -- nivel1: cvillacresSOL
