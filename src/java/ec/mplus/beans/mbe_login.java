@@ -118,7 +118,8 @@ public class mbe_login implements Serializable {
             sis_soporte.obtener_instancia_soporte().agregar_mensaje_error("Seleccione la Empresa", "");
         } else {
             List lis_consulta = conexion.consultar("SELECT usu.id_usuario,usu.id_perfil,usu.tema,emp.id_empresa,"
-                    + "(case when per.nivel_aprobacion is null then 0 else per.nivel_aprobacion end) as nivelAprobacionActual "
+                    + "(case when per.nivel_aprobacion is null then 0 else per.nivel_aprobacion end) as nivelAprobacionActual, "
+                    + "(case when emp.numero_maximo_niveles_aprobacion is null then 1 else emp.numero_maximo_niveles_aprobacion end) as maximoNivelAprobaciones "
                     + "FROM tbl_usuario usu, tbl_empresa emp, tbl_perfil per  "
                     + "WHERE usu.nombre='" + lstr_usuario + "' AND "
                     + "usu.clave=MD5('" + lstr_clave + "') AND "
@@ -132,6 +133,7 @@ public class mbe_login implements Serializable {
                 String lstr_tema = (String) fila[2];
                 lstr_empresa = String.valueOf((Integer) fila[3]);
                 String nivel_aprobacion = String.valueOf((Integer) fila[4]);
+                String numero_maximo_niveles_aprobacion = String.valueOf((Integer) fila[5]);
                 
                 sis_soporte.obtener_instancia_soporte().crear_variable("id_usuario", lint_usuario + "");
                 sis_soporte.obtener_instancia_soporte().crear_variable("id_perfil", lint_perfil + "");
@@ -139,6 +141,7 @@ public class mbe_login implements Serializable {
                 sis_soporte.obtener_instancia_soporte().crear_variable("tema", lstr_tema);
                 sis_soporte.obtener_instancia_soporte().crear_variable("nombre_usuario", lstr_usuario + "");
                 sis_soporte.obtener_instancia_soporte().crear_variable("empresa", lstr_empresa);
+                sis_soporte.obtener_instancia_soporte().crear_variable("numeroMaximoNivelesAprobacion", numero_maximo_niveles_aprobacion);
                 
                 try {
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("mbe_index");

@@ -54,8 +54,6 @@ ALTER TABLE mov_cab_aprobacion_solicitudes
 COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_1 IS 'estado de aprobación nivel 1';
 COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_2 IS 'estado de aprobación nivel 2';
 COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_3 IS 'estado de aprobación nivel 3';
-COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_4 IS 'estado de aprobación nivel 4';
-COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_5 IS 'estado de aprobación nivel 5';
 
 
 -- elimina y agrega columnas de aprobaciones de detalles
@@ -80,8 +78,12 @@ ALTER TABLE mov_det_aprobacion_solicitudes
 COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_1 IS 'estado de aprobación nivel 1 detalle';
 COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_2 IS 'estado de aprobación nivel 2 detalle';
 COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_3 IS 'estado de aprobación nivel 3 detalle';
-COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_4 IS 'estado de aprobación nivel 4 detalle';
-COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_5 IS 'estado de aprobación nivel 5 detalle';
+
+-- agrega el campo para el nivel máximo de los niveles de aprobaciones de solicitudes
+ALTER TABLE tbl_empresa
+  ADD COLUMN numero_maximo_niveles_aprobacion integer;
+COMMENT ON COLUMN tbl_empresa.numero_maximo_niveles_aprobacion IS 'indica el número máximo para los niveles de aprobación de solicitudes de insumos.';
+
 
 --usuarios desarrollo
 -- nivel1: cvillacresSOL
