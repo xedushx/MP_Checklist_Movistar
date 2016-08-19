@@ -192,7 +192,14 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
         }
         
         if (nivelAprobacionActual.intValue() == numeroMinimoNivelesAprobacion) {
+            tab_cab_aprobacion.getColumna("ees_codigo").setLectura(false);
+            tab_cab_aprobacion.getColumna("cas_tipo_trabajo").setLectura(false);
+            tab_cab_aprobacion.getColumna("cas_fecha_trabajo").setLectura(false);
             sbuCondicionAprobacionCabecera.append(" and id_usuario = ").append(idUsuarioActual.intValue());
+        } else {
+            tab_cab_aprobacion.getColumna("ees_codigo").setLectura(true);
+            tab_cab_aprobacion.getColumna("cas_tipo_trabajo").setLectura(true);
+            tab_cab_aprobacion.getColumna("cas_fecha_trabajo").setLectura(true);
         }
 
         tab_cab_aprobacion.setCondicion(" id_empresa = " + sis_soporte.obtener_instancia_soporte().obtener_empresa() + sbuCondicionAprobacionCabecera.toString());
