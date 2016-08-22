@@ -5,6 +5,7 @@
 package ec.mplus.procesos;
 
 import ec.xprime.persistencia.cla_conexion;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,6 +22,10 @@ public class PerfilAprobacion {
     private String nombrePerfilAprobacion;
     private Boolean estado;
     private Integer nivelAprobacion;
+    public static final String ESTADO_PENDIENTE = "PENDIENTE";
+    public static final String ESTADO_APROBADO = "APROBADO";
+    public static final String ESTADO_NO_APROBADO = "NO APROBADO";
+    private static List LISTA_ESTADOS_APROBACION;
 
     public PerfilAprobacion(Integer codigoPerfilAprobacion, String nombrePerfilAprobacion, Boolean estado, Integer nivelAprobacion) {
         this.codigoPerfilAprobacion = codigoPerfilAprobacion;
@@ -59,6 +64,26 @@ public class PerfilAprobacion {
 
     public void setNivelAprobacion(Integer nivelAprobacion) {
         this.nivelAprobacion = nivelAprobacion;
+    }
+
+    public static List getLISTA_ESTADOS_APROBACION() {
+        LISTA_ESTADOS_APROBACION = new ArrayList();
+
+        Object estadoPendiente[] = {
+            ESTADO_PENDIENTE, ESTADO_PENDIENTE
+        };
+        Object estadoAprobado[] = {
+            ESTADO_APROBADO, ESTADO_APROBADO
+        };
+        Object estadoNoAprobado[] = {
+            ESTADO_NO_APROBADO, ESTADO_NO_APROBADO
+        };
+
+        LISTA_ESTADOS_APROBACION.add(estadoPendiente);
+        LISTA_ESTADOS_APROBACION.add(estadoAprobado);
+        LISTA_ESTADOS_APROBACION.add(estadoNoAprobado);
+
+        return LISTA_ESTADOS_APROBACION;
     }
 
     public static List<PerfilAprobacion> obtenerPerfilesAprobacion() {

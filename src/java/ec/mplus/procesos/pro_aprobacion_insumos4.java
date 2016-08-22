@@ -22,6 +22,7 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
     private final static Logger LOGGER = Logger.getLogger(pro_aprobacion_insumos4.class.getName());
     private pf_tabla tab_cab_aprobacion = new pf_tabla();
     private pf_tabla tab_det_aprobacion = new pf_tabla();
+    private pf_tabla tab_bitacora_aprobacion = new pf_tabla();
     private pf_combo com_kit = new pf_combo();
     private List<PerfilAprobacion> perfilesAprobacion = PerfilAprobacion.obtenerPerfilesAprobacion();
     private Integer idUsuarioActual = Integer.valueOf(sis_soporte.obtener_instancia_soporte().obtener_variable("id_usuario"));
@@ -57,6 +58,7 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
         tab_cab_aprobacion.setTabla("mov_cab_aprobacion_solicitudes", "cas_codigo", 1);
         tab_cab_aprobacion.onSelect("seleccionar_tabla1");
         tab_cab_aprobacion.agregarRelacion(tab_det_aprobacion);
+        tab_cab_aprobacion.agregarRelacion(tab_bitacora_aprobacion);
 
         tab_cab_aprobacion.getColumna("cas_codigo").setNombreVisual("CÓDIGO");
         tab_cab_aprobacion.getColumna("id_usuario").setNombreVisual("USUARIO");
@@ -73,7 +75,7 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
         tab_cab_aprobacion.getColumna("ees_codigo").setCombo("mov_estructura_estacion", "ees_codigo", "ees_nombre", "ees_es_estacion = true and id_empresa = " + sis_soporte.obtener_instancia_soporte().obtener_empresa());
 
         tab_cab_aprobacion.getColumna("id_usuario").setLectura(true);
-        
+
         tab_cab_aprobacion.setRows(15);
 
         //tabla de detalle de insumos
@@ -113,13 +115,12 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
 
                 String nombreCampoCabecera = NOMBRE_CAMPO_APROBACION_GEN;
                 String nombreCampoDetalle = NOMBRE_CAMPO_APROBACION_GEN_DET;
-                    
+
                 if (nivel <= totalNivelesConfigurados) {
                     PerfilAprobacion perfilAprobacion = perfilesAprobacion.get(countPerfil);
                     Integer idPerfilAprobacion = perfilAprobacion.getCodigoPerfilAprobacion();
                     String nombrePerfilAprobacion = perfilAprobacion.getNombrePerfilAprobacion();
                     Integer nivelAprobacion = perfilAprobacion.getNivelAprobacion();
-                    
 
                     tab_cab_aprobacion.getColumna(nombreCampoCabecera + nivel).setEstiloColumna("color:red;");
                     tab_det_aprobacion.getColumna(nombreCampoDetalle + nivel).setEstiloColumna("color:red;");
@@ -135,6 +136,9 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
                     tab_cab_aprobacion.getColumna(nombreCampoCabecera + nivel).setLongitud(40);
                     tab_det_aprobacion.getColumna(nombreCampoDetalle + nivel).setLongitud(40);
 
+                    tab_cab_aprobacion.getColumna(nombreCampoCabecera + nivel).setCombo(PerfilAprobacion.getLISTA_ESTADOS_APROBACION());
+                    tab_det_aprobacion.getColumna(nombreCampoDetalle + nivel).setCombo(PerfilAprobacion.getLISTA_ESTADOS_APROBACION());
+
                     nombreCampoCabecera = nombreCampoCabecera + nivelAprobacion.intValue();
                     nombreCampoDetalle = nombreCampoDetalle + nivelAprobacion.intValue();
 
@@ -143,11 +147,14 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
                         tab_cab_aprobacion.getColumna(nombreCampoCabecera).setVisible(true);
                         tab_det_aprobacion.getColumna(nombreCampoDetalle).setVisible(true);
 
+                        tab_cab_aprobacion.getColumna(nombreCampoCabecera).setValorDefecto(PerfilAprobacion.ESTADO_PENDIENTE);
+                        tab_det_aprobacion.getColumna(nombreCampoDetalle).setValorDefecto(PerfilAprobacion.ESTADO_PENDIENTE);
+
                         tab_cab_aprobacion.getColumna(nombreCampoCabecera).setMetodoChange("aprobarDetalles");
 
                     } else if (nivelAprobacion.intValue() < nivelAprobacionActual) {
-                        sbuCondicionAprobacionCabecera.append(" and ").append(nombreCampoCabecera).append(" = 'true' ");
-                        sbuCondicionAprobacionDetalle.append(" and ").append(nombreCampoDetalle).append(" = 'true' ");
+                        sbuCondicionAprobacionCabecera.append(" and ").append(nombreCampoCabecera).append(" = '" + PerfilAprobacion.ESTADO_APROBADO + "' ");
+                        sbuCondicionAprobacionDetalle.append(" and ").append(nombreCampoDetalle).append(" = '" + PerfilAprobacion.ESTADO_APROBADO + "' ");
 
                         tab_cab_aprobacion.getColumna(nombreCampoCabecera).setLectura(true);
                         tab_cab_aprobacion.getColumna(nombreCampoCabecera).setVisible(false);
@@ -161,19 +168,21 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
 
                         tab_cab_aprobacion.getColumna(nombreCampoCabecera).setLectura(true);
                         tab_cab_aprobacion.getColumna(nombreCampoCabecera).setVisible(false);
+                        tab_cab_aprobacion.getColumna(nombreCampoCabecera).setValorDefecto(PerfilAprobacion.ESTADO_PENDIENTE);
 
                         tab_det_aprobacion.getColumna(nombreCampoDetalle).setLectura(true);
                         tab_det_aprobacion.getColumna(nombreCampoDetalle).setVisible(false);
+                        tab_det_aprobacion.getColumna(nombreCampoDetalle).setValorDefecto(PerfilAprobacion.ESTADO_PENDIENTE);
                     }
 
                 } else {
                     tab_cab_aprobacion.getColumna(nombreCampoCabecera + nivel).setLectura(true);
                     tab_cab_aprobacion.getColumna(nombreCampoCabecera + nivel).setVisible(false);
-                    tab_cab_aprobacion.getColumna(nombreCampoCabecera + nivel).setValorDefecto("FALSE");
+                    tab_cab_aprobacion.getColumna(nombreCampoCabecera + nivel).setValorDefecto(PerfilAprobacion.ESTADO_PENDIENTE);
 
                     tab_det_aprobacion.getColumna(nombreCampoDetalle + nivel).setLectura(true);
                     tab_det_aprobacion.getColumna(nombreCampoDetalle + nivel).setVisible(false);
-                    tab_det_aprobacion.getColumna(nombreCampoDetalle + nivel).setValorDefecto("FALSE");
+                    tab_det_aprobacion.getColumna(nombreCampoDetalle + nivel).setValorDefecto(PerfilAprobacion.ESTADO_PENDIENTE);
                 }
 
                 nivel++;
@@ -190,11 +199,14 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
             sis_soporte.obtener_instancia_soporte().agregar_mensaje_error("PConfiguración de Perfiles",
                     "La configuración de su perfil no le permite realizar cambios en esta pantalla.");
         }
-        
+
         if (nivelAprobacionActual.intValue() == numeroMinimoNivelesAprobacion) {
             tab_cab_aprobacion.getColumna("ees_codigo").setLectura(false);
             tab_cab_aprobacion.getColumna("cas_tipo_trabajo").setLectura(false);
             tab_cab_aprobacion.getColumna("cas_fecha_trabajo").setLectura(false);
+
+//            tab_det_aprobacion.getColumna("ins_codigo").setLectura(false);
+
             sbuCondicionAprobacionCabecera.append(" and id_usuario = ").append(idUsuarioActual.intValue());
         } else {
             tab_cab_aprobacion.getColumna("ees_codigo").setLectura(true);
@@ -207,14 +219,38 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
 
         pf_panel_tabla pat_panel1 = new pf_panel_tabla();
         pat_panel1.setPanelTabla(tab_cab_aprobacion);
-        
+
+        tab_det_aprobacion.setCampoOrden("cas_codigo");
         tab_det_aprobacion.setCondicion(" das_codigo is not null " + sbuCondicionAprobacionDetalle.toString());
         tab_det_aprobacion.dibujar();
+
+        //tabla de bitacora de aprobaciones
+        tab_bitacora_aprobacion.setId("tab_bitacora_aprobacion");
+        tab_bitacora_aprobacion.setIdCompleto("tab_tabulador:tab_bitacora_aprobacion");
+        tab_bitacora_aprobacion.setTabla("mov_bitacora_aprobacion_solicitud", "bas_codigo", 3);
+
+        tab_bitacora_aprobacion.getColumna("id_usuario").setNombreVisual("AUTORIZADO POR");
+        tab_bitacora_aprobacion.getColumna("bas_fecha_registro").setNombreVisual("FECHA");
+        tab_bitacora_aprobacion.getColumna("bas_estado").setNombreVisual("ESTADO");
+        tab_bitacora_aprobacion.getColumna("bas_nivel_aprobacion").setNombreVisual("NIVEL");
+
+        tab_bitacora_aprobacion.getColumna("bas_fecha_registro").setLongitud(70);
+        tab_bitacora_aprobacion.getColumna("id_usuario").setLongitud(70);
+
+        tab_bitacora_aprobacion.getColumna("id_usuario").setCombo("tbl_usuario", "id_usuario", "nombre_completo", "id_empresa = " + sis_soporte.obtener_instancia_soporte().obtener_empresa());
+
+        tab_bitacora_aprobacion.setCampoOrden("bas_fecha_registro desc");
+
+        tab_bitacora_aprobacion.dibujar();
 
         pf_panel_tabla pat_panel_grupos = new pf_panel_tabla();
         pat_panel_grupos.setPanelTabla(tab_det_aprobacion);
 
+        pf_panel_tabla pat_bitacora = new pf_panel_tabla();
+        pat_bitacora.setPanelTabla(tab_bitacora_aprobacion);
+
         tab_tabulador.agregarTab("DETALLE DE INSUMOS", pat_panel_grupos);
+        tab_tabulador.agregarTab("BITÁCORA DE APROBACIÓN DE SOLICITUDES", pat_bitacora);
 
         pf_layout div_division = new pf_layout();
         div_division.setId("div_division");
@@ -227,46 +263,104 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
     private void configurarInicial() {
         if (!esPerfilConsulta) {
             for (int i = 0; i < tab_cab_aprobacion.getTotalFilasVisibles(); i++) {
-                Boolean estaAprobada = Boolean.valueOf(tab_cab_aprobacion.getValor(i, NOMBRE_CAMPO_APROBACION_GEN + nivelAprobacionActual));
+                String estadoAprobacion = tab_cab_aprobacion.getValor(i, NOMBRE_CAMPO_APROBACION_GEN + nivelAprobacionActual);
+                Boolean estaAprobada = Boolean.FALSE;
+
+                if (estadoAprobacion.contains(PerfilAprobacion.ESTADO_APROBADO)) {
+                    estaAprobada = Boolean.TRUE;
+                }
+
                 tab_cab_aprobacion.getFila(i).setLectura(estaAprobada.booleanValue());
 
                 for (int j = 0; j < tab_det_aprobacion.getFilas().size(); j++) {
-                    Boolean estaAprobadaDet = Boolean.valueOf(tab_det_aprobacion.getValor(j, NOMBRE_CAMPO_APROBACION_GEN_DET + nivelAprobacionActual));
+                    Boolean estaAprobadaDet = Boolean.FALSE;
+                    String estadoAprobacionDetalle = tab_det_aprobacion.getValor(j, NOMBRE_CAMPO_APROBACION_GEN_DET + nivelAprobacionActual);
+
+                    if (estadoAprobacionDetalle.contains(PerfilAprobacion.ESTADO_APROBADO)) {
+                        estaAprobadaDet = Boolean.TRUE;
+                    }
+
                     tab_det_aprobacion.getFila(j).setLectura(estaAprobadaDet.booleanValue());
                 }
             }
+        }
+
+        for (int i = 0; i < tab_bitacora_aprobacion.getTotalFilas(); i++) {
+            tab_bitacora_aprobacion.getFila(i).setLectura(true);
         }
     }
 
     private void validarPuedeModificar() {
 
-        if (!esPerfilConsulta) {
+        if (!tab_cab_aprobacion.isFilaInsertada()) {
+            if (!esPerfilConsulta) {
 
-            Boolean estaAprobada = Boolean.valueOf(tab_cab_aprobacion.getValor(NOMBRE_CAMPO_APROBACION_GEN + nivelAprobacionActual));
-            tab_cab_aprobacion.getFilaSeleccionada().setLectura(estaAprobada.booleanValue());
+                String estadoAprobacion = tab_cab_aprobacion.getValor(NOMBRE_CAMPO_APROBACION_GEN + nivelAprobacionActual);
+                Boolean estaAprobada = Boolean.FALSE;
 
-            puedeModificar = !estaAprobada;
+                if (estadoAprobacion.contains(PerfilAprobacion.ESTADO_APROBADO)) {
+                    estaAprobada = Boolean.TRUE;
+                }
 
-            for (int j = 0; j < tab_det_aprobacion.getFilas().size(); j++) {
-                Boolean estaAprobadaDet = Boolean.valueOf(tab_det_aprobacion.getValor(j, NOMBRE_CAMPO_APROBACION_GEN_DET + nivelAprobacionActual));
-                tab_det_aprobacion.getFila(j).setLectura(estaAprobadaDet.booleanValue());
+                tab_cab_aprobacion.getFilaSeleccionada().setLectura(estaAprobada.booleanValue());
+
+                puedeModificar = !estaAprobada;
+
+                for (int j = 0; j < tab_det_aprobacion.getFilas().size(); j++) {
+                    Boolean estaAprobadaDet = Boolean.FALSE;
+                    String estadoAprobacionDetalle = tab_det_aprobacion.getValor(j, NOMBRE_CAMPO_APROBACION_GEN_DET + nivelAprobacionActual);
+
+                    if (estadoAprobacionDetalle.contains(PerfilAprobacion.ESTADO_APROBADO)) {
+                        estaAprobadaDet = Boolean.TRUE;
+                    }
+
+                    tab_det_aprobacion.getFila(j).setLectura(estaAprobadaDet.booleanValue());
+                }
+
+                for (int i = 0; i < tab_bitacora_aprobacion.getTotalFilas(); i++) {
+                    tab_bitacora_aprobacion.getFila(i).setLectura(true);
+                }
+
             }
-
-            sis_soporte.obtener_instancia_soporte().addUpdate("tab_cab_aprobacion, bar_botones, tab_tabulador:tab_det_aprobacion");
-
         }
+        
+        sis_soporte.obtener_instancia_soporte().addUpdate("tab_cab_aprobacion, bar_botones, tab_tabulador:tab_det_aprobacion");
     }
 
     private void validarPuedeModificarDetalle() {
 
-        if (!esPerfilConsulta) {
-            Boolean estaAprobadaDet = Boolean.valueOf(tab_det_aprobacion.getValor(NOMBRE_CAMPO_APROBACION_GEN_DET + nivelAprobacionActual));
-            tab_det_aprobacion.getFilaSeleccionada().setLectura(estaAprobadaDet.booleanValue());
+        if (!tab_det_aprobacion.isFilaInsertada()) {
+            
+            if (!esPerfilConsulta) {
 
-            puedeModificarDetalle = !estaAprobadaDet;
+                Boolean estaAprobadaDet = Boolean.FALSE;
+                String estadoAprobacionDetalle = tab_det_aprobacion.getValor(NOMBRE_CAMPO_APROBACION_GEN_DET + nivelAprobacionActual);
 
-            sis_soporte.obtener_instancia_soporte().addUpdate("bar_botones, tab_tabulador:tab_det_aprobacion");
+                if (estadoAprobacionDetalle.contains(PerfilAprobacion.ESTADO_APROBADO)) {
+                    estaAprobadaDet = Boolean.TRUE;
+                }
+
+                tab_det_aprobacion.getFilaSeleccionada().setLectura(estaAprobadaDet.booleanValue());
+
+                puedeModificarDetalle = !estaAprobadaDet;
+            }
+        } else {
+            puedeModificarDetalle = Boolean.TRUE;
+            tab_det_aprobacion.getFila(tab_det_aprobacion.getFilaActual()).setLectura(false);
         }
+        
+        sis_soporte.obtener_instancia_soporte().addUpdate("bar_botones, tab_tabulador:tab_det_aprobacion");
+
+    }
+
+    public void seleccionar_tabla1(AjaxBehaviorEvent evt) {
+        tab_cab_aprobacion.seleccionarFila(evt);
+        validarPuedeModificar();
+    }
+
+    public void seleccionar_tabla2(AjaxBehaviorEvent evt) {
+        tab_det_aprobacion.seleccionarFila(evt);
+        validarPuedeModificarDetalle();
     }
 
     public void seleccionar_tabla1(SelectEvent evt) {
@@ -283,20 +377,31 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
 
         tab_cab_aprobacion.modificar(evt);
 
-        String aprobado = tab_cab_aprobacion.getValor(NOMBRE_CAMPO_APROBACION_GEN + nivelAprobacionActual);
-//        Boolean aprobadoBool = Boolean.valueOf(aprobado);
+        String estadoAprobacion = tab_cab_aprobacion.getValor(NOMBRE_CAMPO_APROBACION_GEN + nivelAprobacionActual);
 
-//        tab_cab_aprobacion.getFilaSeleccionada().setLectura(aprobadoBool.booleanValue());
-
-        for (int j = 0; j < tab_det_aprobacion.getTotalFilasVisibles(); j++) {
+        for (int j = 0; j < tab_det_aprobacion.getTotalFilas(); j++) {
             tab_det_aprobacion.modificar(j);
             for (int i = 1; i <= nivelAprobacionActual; i++) {
-                tab_det_aprobacion.setValor(j, NOMBRE_CAMPO_APROBACION_GEN_DET + i, aprobado);
-//                tab_det_aprobacion.getFila(j).setLectura(true);
+                String estadoAprobacionActual = tab_det_aprobacion.getValor(j, NOMBRE_CAMPO_APROBACION_GEN_DET + i);
+                if (!estadoAprobacionActual.contains(PerfilAprobacion.ESTADO_APROBADO)) {
+                    tab_det_aprobacion.setFilaSeleccionada(tab_det_aprobacion.getFila(j));
+                    tab_det_aprobacion.setFilaActual(j);
+                    tab_det_aprobacion.setValor(tab_det_aprobacion.getFilaActual(), NOMBRE_CAMPO_APROBACION_GEN_DET + i, estadoAprobacion);
+                }
             }
         }
 
-        sis_soporte.obtener_instancia_soporte().addUpdate("tab_cab_aprobacion,tab_tabulador:tab_det_aprobacion");
+        if (tab_bitacora_aprobacion.isFilaInsertada()) {
+            tab_bitacora_aprobacion.actualizar();
+        }
+
+        tab_bitacora_aprobacion.insertar();
+        tab_bitacora_aprobacion.setValor("id_usuario", String.valueOf(idUsuarioActual));
+        tab_bitacora_aprobacion.setValor("bas_fecha_registro", sis_soporte.obtener_instancia_soporte().getFechaHoraActual());
+        tab_bitacora_aprobacion.setValor("bas_estado", estadoAprobacion);
+        tab_bitacora_aprobacion.setValor("bas_nivel_aprobacion", String.valueOf(nivelAprobacionActual));
+
+        sis_soporte.obtener_instancia_soporte().addUpdate("tab_cab_aprobacion,tab_tabulador:tab_det_aprobacion,tab_tabulador:tab_bitacora_aprobacion");
     }
 
     public void agregarInsumosKit() {
@@ -321,7 +426,7 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
                         tab_det_aprobacion.setValor("uni_codigo", mov_detalle_kit.getValor(i, "uni_codigo"));
 
                         for (int j = 1; j <= numeroMaximoNivelesAprobacion; j++) {
-                            tab_det_aprobacion.setValor(NOMBRE_CAMPO_APROBACION_GEN_DET + j, "TRUE");
+                            tab_det_aprobacion.setValor(NOMBRE_CAMPO_APROBACION_GEN_DET + j, PerfilAprobacion.ESTADO_APROBADO);
                         }
 
                     }
@@ -447,11 +552,12 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
 
     @Override
     public void insertar() {
-        if (tab_cab_aprobacion.isFocus()) {
+        if (tab_cab_aprobacion.isFocus() && nivelAprobacionActual == numeroMinimoNivelesAprobacion) {
             if (tab_cab_aprobacion.isFilaInsertada() == false) {
                 tab_cab_aprobacion.getColumna("id_usuario").setValorDefecto(String.valueOf(idUsuarioActual.intValue()));
                 tab_cab_aprobacion.getColumna("cas_fecha_registro").setValorDefecto(sis_soporte.obtener_instancia_soporte().getFechaActual() + " " + sis_soporte.obtener_instancia_soporte().getHoraActual());
                 tab_cab_aprobacion.insertar();
+                puedeModificar = Boolean.TRUE;
             } else {
                 sis_soporte.obtener_instancia_soporte().agregarMensajeInfo("No se puede Insertar",
                         "Debe guardar la solicitud actual");
@@ -461,13 +567,12 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
 
             for (int j = 1; j <= numeroMaximoNivelesAprobacion; j++) {
                 if (j < nivelAprobacionActual) {
-                    tab_det_aprobacion.setValor(NOMBRE_CAMPO_APROBACION_GEN_DET + j, "TRUE");
+                    tab_det_aprobacion.setValor(NOMBRE_CAMPO_APROBACION_GEN_DET + j, PerfilAprobacion.ESTADO_APROBADO);
                 } else {
-                    tab_det_aprobacion.setValor(NOMBRE_CAMPO_APROBACION_GEN_DET + j, "FALSE");
+                    tab_det_aprobacion.setValor(NOMBRE_CAMPO_APROBACION_GEN_DET + j, PerfilAprobacion.ESTADO_PENDIENTE);
                 }
             }
         }
-
 //        validarPuedeModificar();
 
     }
@@ -477,6 +582,7 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
         // valida la longitud minima del campo nick si inserto o modifico
         tab_cab_aprobacion.guardar();
         tab_det_aprobacion.guardar();
+        tab_bitacora_aprobacion.guardar();
         guardarPantalla();
         configurarInicial();
     }
@@ -514,5 +620,13 @@ public class pro_aprobacion_insumos4 extends sis_pantalla {
 
     public void setCom_kit(pf_combo com_kit) {
         this.com_kit = com_kit;
+    }
+
+    public pf_tabla getTab_bitacora_aprobacion() {
+        return tab_bitacora_aprobacion;
+    }
+
+    public void setTab_bitacora_aprobacion(pf_tabla tab_bitacora_aprobacion) {
+        this.tab_bitacora_aprobacion = tab_bitacora_aprobacion;
     }
 }

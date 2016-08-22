@@ -42,15 +42,15 @@ ALTER TABLE mov_cab_aprobacion_solicitudes
 ALTER TABLE mov_cab_aprobacion_solicitudes
   DROP COLUMN cas_estado_aprobacion_supervisor;
 ALTER TABLE mov_cab_aprobacion_solicitudes
-  ADD COLUMN cas_aprobacion_1 boolean;
+  ADD COLUMN cas_aprobacion_1 varchar(50) DEFAULT 'PENDIENTE';
 ALTER TABLE mov_cab_aprobacion_solicitudes
-  ADD COLUMN cas_aprobacion_2 boolean;
+  ADD COLUMN cas_aprobacion_2 varchar(50) DEFAULT 'PENDIENTE';
 ALTER TABLE mov_cab_aprobacion_solicitudes
-  ADD COLUMN cas_aprobacion_3 boolean;
+  ADD COLUMN cas_aprobacion_3 varchar(50) DEFAULT 'PENDIENTE';
 ALTER TABLE mov_cab_aprobacion_solicitudes
-  ADD COLUMN cas_aprobacion_4 boolean;
+  ADD COLUMN cas_aprobacion_4 varchar(50) DEFAULT 'PENDIENTE';
 ALTER TABLE mov_cab_aprobacion_solicitudes
-  ADD COLUMN cas_aprobacion_5 boolean;
+  ADD COLUMN cas_aprobacion_5 varchar(50) DEFAULT 'PENDIENTE';
 COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_1 IS 'estado de aprobación nivel 1';
 COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_2 IS 'estado de aprobación nivel 2';
 COMMENT ON COLUMN mov_cab_aprobacion_solicitudes.cas_aprobacion_3 IS 'estado de aprobación nivel 3';
@@ -68,15 +68,15 @@ ALTER TABLE mov_det_aprobacion_solicitudes
 ALTER TABLE mov_det_aprobacion_solicitudes
   DROP COLUMN das_estado_aprobacion;
 ALTER TABLE mov_det_aprobacion_solicitudes
-  ADD COLUMN das_aprobacion_1 boolean;
+  ADD COLUMN das_aprobacion_1 varchar(50) DEFAULT 'PENDIENTE';
 ALTER TABLE mov_det_aprobacion_solicitudes
-  ADD COLUMN das_aprobacion_2 boolean;
+  ADD COLUMN das_aprobacion_2 varchar(50) DEFAULT 'PENDIENTE';
 ALTER TABLE mov_det_aprobacion_solicitudes
-  ADD COLUMN das_aprobacion_3 boolean;
+  ADD COLUMN das_aprobacion_3 varchar(50) DEFAULT 'PENDIENTE';
 ALTER TABLE mov_det_aprobacion_solicitudes
-  ADD COLUMN das_aprobacion_4 boolean;
+  ADD COLUMN das_aprobacion_4 varchar(50) DEFAULT 'PENDIENTE';
 ALTER TABLE mov_det_aprobacion_solicitudes
-  ADD COLUMN das_aprobacion_5 boolean;
+  ADD COLUMN das_aprobacion_5 varchar(50) DEFAULT 'PENDIENTE';
 COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_1 IS 'estado de aprobación nivel 1 detalle';
 COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_2 IS 'estado de aprobación nivel 2 detalle';
 COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_3 IS 'estado de aprobación nivel 3 detalle';
@@ -87,6 +87,30 @@ COMMENT ON COLUMN mov_det_aprobacion_solicitudes.das_aprobacion_5 IS 'estado de 
 ALTER TABLE tbl_empresa
   ADD COLUMN numero_maximo_niveles_aprobacion integer;
 COMMENT ON COLUMN tbl_empresa.numero_maximo_niveles_aprobacion IS 'indica el número máximo para los niveles de aprobación de solicitudes de insumos.';
+
+-- tabla para bitacora de aprobaciones
+CREATE TABLE public.mov_bitacora_aprobacion_solicitud
+(
+   bas_codigo integer NOT NULL, 
+   bas_fecha_registro character varying(50) NOT NULL, 
+   cas_codigo integer, 
+   id_usuario integer NOT NULL, 
+   bas_estado character varying(50) NOT NULL, 
+   bas_nivel_aprobacion character varying(30) NOT NULL, 
+   PRIMARY KEY (bas_codigo), 
+   FOREIGN KEY (cas_codigo) REFERENCES mov_cab_aprobacion_solicitudes (cas_codigo) ON UPDATE NO ACTION ON DELETE NO ACTION, 
+   FOREIGN KEY (id_usuario) REFERENCES tbl_usuario (id_usuario) ON UPDATE NO ACTION ON DELETE NO ACTION
+) 
+WITH (
+  OIDS = FALSE
+)
+;
+COMMENT ON COLUMN public.mov_bitacora_aprobacion_solicitud.bas_codigo IS 'código principal de la tabla PK.';
+COMMENT ON COLUMN public.mov_bitacora_aprobacion_solicitud.bas_fecha_registro IS 'fecha en la que se realizó la aprobación de la solicitud';
+COMMENT ON COLUMN public.mov_bitacora_aprobacion_solicitud.cas_codigo IS 'codigo de la cabecera de la solicitud';
+COMMENT ON COLUMN public.mov_bitacora_aprobacion_solicitud.id_usuario IS 'código del usuario que realizó la aprobación de la solicitud';
+COMMENT ON COLUMN public.mov_bitacora_aprobacion_solicitud.bas_estado IS 'estado en el que se encuentra la solicitud';
+COMMENT ON COLUMN public.mov_bitacora_aprobacion_solicitud.bas_nivel_aprobacion IS 'nivel en el que se encuentra la solicitud';
 
 
 --usuarios desarrollo
